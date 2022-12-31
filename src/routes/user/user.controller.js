@@ -3,7 +3,7 @@ const errorHandler = require("../../middleware/error");
 const User = require("../../models/user");
 const { generateAuthToken } = require("../../utils/helpers");
 const createUserSchema = require("./validationSchema");
-
+const authHandler = require("../../middleware/auth");
 const router = express.Router();
 //get all users
 router.get(
@@ -15,7 +15,7 @@ router.get(
 );
 //Veiw profile of a specific user
 router.get(
-  "/:userId/viewprofile",
+  "/:userId/viewprofile", authHandler,
   errorHandler(async (req, res) => {
     const user = await User.findOne({ _id: req.params.userId });
 
@@ -39,6 +39,7 @@ router.post("/login", async (req, res) => {
     username: user.username,
     email: user.email
   });
+  console.log("this is your tokens",token)
 
   res.status(200).send({ message: "success", token });
 });
@@ -55,7 +56,7 @@ router.post("/signup", async (req, res) => {
   res.status(200).send({ user });
 });
 //edit profile of a user
-router.put("/:userId/editprofile",async (req,res)=>{
+router.put("/:userId/editprofile",authHandler,async (req,res)=>{
 
   console.log ('body', req.body ,req.params.userId)
 
@@ -68,7 +69,7 @@ router.put("/:userId/editprofile",async (req,res)=>{
       }
     });
 //delete a user
-router.delete("/:userId/deleteuser",async (req,res)=>{
+router.delete("/:userId/deleteuser",authHandler,async (req,res)=>{
 
   try {
       const user = await User.findByIdAndDelete(req.params.userId);

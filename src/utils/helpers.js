@@ -7,7 +7,9 @@ const privateKey = "hamna"
 const generateAuthToken = ({ username, email }) =>
   jwt.sign({ username, email}, privateKey);
 
-const verifyAuthToken = (token) => jwt.verify(token, privateKey);
+const verifyAuthToken = (token) => {
+  console.log ('here token is ---------------',jwt.verify(token, privateKey))
+  return jwt.verify(token, privateKey)};
 
 module.exports = {
   generateAuthToken,
